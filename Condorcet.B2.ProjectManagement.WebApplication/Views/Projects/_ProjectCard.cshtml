@@ -1,0 +1,79 @@
+@model ProjectDetailsViewModel
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">@Model.Title</h5>
+            <span class="badge bg-light text-primary">@Model.ProjectCode</span>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h6 class="card-subtitle mb-3 text-muted">Informations principales</h6>
+
+                <p><strong>ID:</strong> @Model.Id</p>
+
+                <p>
+                    <strong>Priorité:</strong>
+                    <span class="badge @(Model.Priority switch
+                                       {
+                                           ProjectPriority.Critical => "bg-danger",
+                                           ProjectPriority.High => "bg-warning text-dark",
+                                           ProjectPriority.Medium => "bg-info text-dark",
+                                           ProjectPriority.Low => "bg-success",
+                                           ProjectPriority.Optional => "bg-secondary",
+                                           _ => "bg-light text-dark"
+                                       })">
+                            @Model.Priority.GetDisplayName()
+                        </span>
+                </p>
+
+                <p><strong>Budget:</strong> @Model.Budget.ToString("C0")</p>
+            </div>
+            <div class="col-md-6">
+                <h6 class="card-subtitle mb-3 text-muted">Calendrier</h6>
+
+                <p><strong>Date de début:</strong> @Model.StartDate.ToString("dd/MM/yyyy")</p>
+
+                <p>
+                    <strong>Date de fin prévue:</strong>
+                    @if (Model.ExpectedEndDate.HasValue)
+                    {
+                        @Model.ExpectedEndDate.Value.ToString("dd/MM/yyyy")
+                    }
+                    else
+                    {
+                        <span class="text-muted">Non définie</span>
+                    }
+                </p>
+            </div>
+        </div>
+        @if (!string.IsNullOrEmpty(Model.Description))
+        {
+            <hr/>
+            <h6 class="card-subtitle mb-2 text-muted">Description</h6>
+            <p class="card-text">@Model.Description</p>
+        }
+    </div>
+    <div class="card-footer text-end">
+        @{
+            var action = ViewData["CardAction"] as string ?? "Index";
+        }
+        @if (action == "Delete")
+        {
+            <form asp-controller="Projects" asp-action="Delete" method="post">
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" name="id" value="@Model.Id"/>
+
+                <button type="submit" class="btn btn-danger">
+                    Confirmer la suppression
+                </button>
+            </form>
+        }
+        else
+        {
+            <a asp-action="Index" class="btn btn-sm btn-outline-secondary">Retour à la liste</a>
+        }
+    </div>
+</div>

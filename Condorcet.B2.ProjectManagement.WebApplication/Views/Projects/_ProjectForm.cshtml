@@ -1,0 +1,66 @@
+@model ProjectFormViewModel
+
+<div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+<div class="mb-3">
+    <label asp-for="Title" class="form-label"></label>
+    <input asp-for="Title" class="form-control"/>
+    <span asp-validation-for="Title" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="ProjectCode" class="form-label d-flex justify-content-between">
+        <span>@Html.DisplayNameFor(model => model.ProjectCode)</span>
+        @if (Model.IsEdition)
+        {
+            <span class="badge bg-secondary text-white">Non modifiable</span>
+        }
+    </label>
+    <input asp-for="ProjectCode" 
+           class="form-control @(Model.IsEdition ? "bg-light border-secondary" : "")" 
+           readonly="@Model.IsEdition"/>
+    <span asp-validation-for="ProjectCode" class="text-danger"></span>
+    <small class="form-text text-muted">Format: 3 lettres majuscules suivies de 3 chiffres (ex: ABC123)</small>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Description" class="form-label"></label>
+    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+    <span asp-validation-for="Description" class="text-danger"></span>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label asp-for="StartDate" class="form-label"></label>
+        <input asp-for="StartDate" class="form-control"/>
+        <span asp-validation-for="StartDate" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label asp-for="ExpectedEndDate" class="form-label"></label>
+        <input asp-for="ExpectedEndDate" class="form-control"/>
+        <span asp-validation-for="ExpectedEndDate" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Priority" class="form-label"></label>
+    <select asp-for="Priority" class="form-select" asp-items="Html.GetEnumSelectList<ProjectPriority>()">
+        <option value="">Sélectionner une priorité</option>
+    </select>
+    <span asp-validation-for="Priority" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Budget" class="form-label"></label>
+    <div class="input-group">
+        <span class="input-group-text">€</span>
+        <input asp-for="Budget" class="form-control"/>
+    </div>
+    <span asp-validation-for="Budget" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <button type="submit" class="btn btn-primary">@(Model.IsEdition ? "Sauver le projet": "Créer le projet")</button>
+    <a asp-action="Index" class="btn btn-secondary">Annuler</a>
+</div>

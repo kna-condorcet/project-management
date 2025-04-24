@@ -1,0 +1,14 @@
+@model ProjectFormViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<h2>Editer un projet</h2>
+
+<div class="row">
+    <div class="col-md-8">
+        <form asp-action="Edit" method="post">
+            <partial name="_ProjectForm" model="Model"/>
+        </form>
+    </div>
+</div>

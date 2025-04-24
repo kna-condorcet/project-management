@@ -1,0 +1,106 @@
+@using Condorcet.B2.ProjectManagement.WebApplication.Extensions
+@model ProjectIndexViewModel
+
+@{
+    ViewData["Title"] = "Projects";
+
+    // Fonction helper pour obtenir la classe CSS de badge selon la priorité
+    string GetPriorityBadgeClass(ProjectPriority priority) => priority switch
+    {
+        ProjectPriority.Critical => "bg-danger",
+        ProjectPriority.High => "bg-warning text-dark",
+        ProjectPriority.Medium => "bg-info text-dark",
+        ProjectPriority.Low => "bg-success",
+        ProjectPriority.Optional => "bg-secondary",
+        _ => "bg-light text-dark"
+    };
+}
+
+<div class="text-center">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="display-4">Projects</h1>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nouveau Projet
+        </a>
+    </div>
+    @if (!Model.Projects.Any())
+    {
+        <div class="alert alert-info">
+            Aucun projet ne correspond à vos critères de recherche.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Projects[0].ProjectCode)</th>
+                    <th>@Html.DisplayNameFor(model => model.Projects[0].Title)</th>
+                    <th>@Html.DisplayNameFor(model => model.Projects[0].StartDate)</th>
+                    <th>@Html.DisplayNameFor(model => model.Projects[0].ExpectedEndDate)</th>
+                    <th>@Html.DisplayNameFor(model => model.Projects[0].Priority)</th>
+                    <th>@Html.DisplayNameFor(model => model.Projects[0].Budget)</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var project in Model.Projects)
+                {
+                    <tr>
+                        <td>
+                            <span class="badge bg-primary">@project.ProjectCode</span>
+                        </td>
+                        <td>
+                            <strong>@project.Title</strong>
+                            @if (!string.IsNullOrEmpty(project.Description))
+                            {
+                                <small class="d-block text-muted "
+                                       style="max-width: 250px; margin-left: auto; margin-right: auto;">
+                                    @project.Description
+                                </small>
+                            }
+                        </td>
+                        <td>@project.StartDate.ToString("d")</td>
+                        <td>
+                            @if (project.ExpectedEndDate.HasValue)
+                            {
+                                @project.ExpectedEndDate.Value.ToString("d")
+                            }
+                            else
+                            {
+                                <span class="text-muted">Non définie</span>
+                            }
+                        </td>
+                        <td>
+                            <span class="badge @GetPriorityBadgeClass(project.Priority)">
+                                @project.Priority.GetDisplayName()
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            @project.Budget.ToString("C0")
+                        </td>
+                        <td class="text-nowrap">
+                            <div class="btn-group" role="group">
+                                <a asp-action="Details" asp-route-id="@project.Id"
+                                   class="btn btn-sm btn-outline-primary" title="Détails">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@project.Id"
+                                   class="btn btn-sm btn-outline-secondary" title="Modifier">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@project.Id"
+                                   class="btn btn-sm btn-outline-danger" title="Supprimer">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+

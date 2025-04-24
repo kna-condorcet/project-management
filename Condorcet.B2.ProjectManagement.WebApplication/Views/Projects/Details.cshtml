@@ -1,0 +1,21 @@
+@model ProjectDetailsViewModel
+
+@{
+    ViewData["Title"] = "Détails du projet";
+}
+
+<div class="container mt-4">
+    <!-- En-tête avec boutons d'action -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Détails du projet</h1>
+        <div>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                Retour à la liste
+            </a>
+        </div>
+    </div>
+    <partial name="_ProjectCard" model="Model" view-data="@(new ViewDataDictionary(ViewData)
+                                                          {
+                                                              { "CardAction", "Index" }
+                                                          })"/>
+</div>
