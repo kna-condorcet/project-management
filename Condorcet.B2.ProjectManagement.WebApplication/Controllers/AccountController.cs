@@ -94,7 +94,6 @@ public class AccountController : Controller
     {
         if (Url.IsLocalUrl(returnUrl))
             return Redirect(returnUrl);
-        else
-            return RedirectToAction("Index", "Home");
+        return RedirectToAction("Index", "Home");
     }
 }
